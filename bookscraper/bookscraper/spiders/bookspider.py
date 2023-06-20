@@ -13,8 +13,6 @@ class BookspiderSpider(scrapy.Spider):
         }
     }
 
-
-
     def parse(self, response):
         
         books = response.css('article.product_pod')
@@ -41,7 +39,6 @@ class BookspiderSpider(scrapy.Spider):
 
         table_rows = response.css("table tr")
         book_item = BookItem()
-
     
         book_item['url'] = response.url,
         book_item['title'] = response.css('.product_main h1::text').get(),

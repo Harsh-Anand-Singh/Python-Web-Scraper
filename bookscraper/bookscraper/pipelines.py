@@ -1,19 +1,11 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-
 
 class BookscraperPipeline:
     def process_item(self, item, spider):
 
         adapter = ItemAdapter(item)
 
-        ## Strip all whitespaces from strings
+        # Strip all whitespaces from strings
         field_names = adapter.field_names()
         for field_name in field_names:
             if field_name != 'description':
@@ -21,7 +13,7 @@ class BookscraperPipeline:
                 adapter[field_name] = value[0].strip()
 
 
-        ## Category & Product Type --> switch to lowercase
+        # Category & Product Type --> switch to lowercase
         lowercase_keys = ['category', 'product_type']
         for lowercase_key in lowercase_keys:
             value = adapter.get(lowercase_key)
@@ -29,7 +21,7 @@ class BookscraperPipeline:
 
 
 
-        ## Price --> convert to float
+        # Price --> convert to float
         price_keys = ['price', 'price_excl_tax', 'price_incl_tax', 'tax']
         for price_key in price_keys:
             value = adapter.get(price_key)
@@ -37,7 +29,7 @@ class BookscraperPipeline:
             adapter[price_key] = float(value)
 
 
-        ## Availability --> extract number of books in stock
+        # Availability --> extract number of books in stock
         availability_string = adapter.get('availability')
         split_string_array = availability_string.split('(')
         if len(split_string_array) < 2:
@@ -48,12 +40,12 @@ class BookscraperPipeline:
 
 
 
-        ## Reviews --> convert string to number
+        # Reviews --> convert string to number
         num_reviews_string = adapter.get('num_reviews')
         adapter['num_reviews'] = int(num_reviews_string)
 
 
-        ## Stars --> convert text to number
+        # Stars --> convert text to number
         stars_string = adapter.get('stars')
         split_stars_array = stars_string.split(' ')
         stars_text_value = split_stars_array[1].lower()
@@ -86,10 +78,10 @@ class SaveToMySQLPipeline:
             database = 'books'
         )
 
-        ## Create cursor, used to execute commands
+        # Create cursor, used to execute commands
         self.cur = self.conn.cursor()
 
-        ## Create books table if none exists
+        # Create books table if none exists
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS books(
             id int NOT NULL auto_increment, 
@@ -112,7 +104,7 @@ class SaveToMySQLPipeline:
 
     def process_item(self, item, spider):
 
-        ## Define insert statement
+        # Define insert statement
         self.cur.execute(""" insert into books (
             url, 
             title, 
@@ -157,13 +149,13 @@ class SaveToMySQLPipeline:
             str(item["description"][0])
         ))
 
-        # ## Execute insert of data into database
+        # Execute insert of data into database
         self.conn.commit()
         return item
 
     
     def close_spider(self, spider):
 
-        ## Close cursor & connection to database 
+        # Close cursor & connection to database 
         self.cur.close()
         self.conn.close()

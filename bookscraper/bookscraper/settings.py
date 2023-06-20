@@ -1,12 +1,3 @@
-# Scrapy settings for bookscraper project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
 BOT_NAME = 'bookscraper'
 
 SPIDER_MODULES = ['bookscraper.spiders']
@@ -16,7 +7,7 @@ FEEDS = {
     'booksdata.json': {'format': 'json'},
 }
 
-SCRAPEOPS_API_KEY = 'YOUR_API_KEY_HERE' # signup at https://scrapeops.io
+SCRAPEOPS_API_KEY = 'API_KEY_HERE' 
 SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 5
